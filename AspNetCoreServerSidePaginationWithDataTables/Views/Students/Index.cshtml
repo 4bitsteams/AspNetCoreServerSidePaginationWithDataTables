@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DatatablesServerSide.Models.Student>
+﻿@model IEnumerable<AspNetCoreServerSidePaginationWithDataTables.Models.Student>
 
 
 @{
@@ -33,9 +33,9 @@
         </tr>
     </thead>
 </table>
-<link href="~/lib/datatables/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/datatables/css/jquery.dataTables.css" rel="stylesheet" />
 @section Scripts{
-    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/datatables/js/jquery.dataTables.js"></script>
     <script>
         //
         // Pipelining function for DataTables. To be used to the `ajax` option of DataTables

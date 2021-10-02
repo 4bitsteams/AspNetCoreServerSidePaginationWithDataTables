@@ -20,7 +20,6 @@ namespace AspNetCoreServerSidePaginationWithDataTables
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Data.ApplicationDbContext.InitStudentList(1000);//Add this line to create 100 students
         }
 
         public IConfiguration Configuration { get; }

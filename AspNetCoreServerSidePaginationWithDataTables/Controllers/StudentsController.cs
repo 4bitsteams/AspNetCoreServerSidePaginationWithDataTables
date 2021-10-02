@@ -4,19 +4,26 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreServerSidePaginationWithDataTables.Data;
-using DatatablesServerSide.Models;
+using AspNetCoreServerSidePaginationWithDataTables.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Amqp.Framing;
 
-namespace DatatablesServerSide.Controllers
+namespace AspNetCoreServerSidePaginationWithDataTables.Controllers
 {
     public class StudentsController : Controller
     {
+        private readonly ApplicationDbContext _context;
         // GET: Student
+
+        public StudentsController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         public ActionResult Index()
         {
-            return View(ApplicationDbContext.StudentList);// Send students to view
+            var StudentList = _context.students.ToList();
+            return View(StudentList);// Send students to view
         }
 
         
@@ -45,31 +52,39 @@ namespace DatatablesServerSide.Controllers
 
             // Total count matching search criteria 
             int recordsFilteredCount =
-                    ApplicationDbContext.StudentList
+                    _context.students
                     .Where(a => a.Lastname.Contains(searchValue) || a.Firstname.Contains(searchValue))
                     .Count();
 
             // Total Records Count
-            int recordsTotalCount = ApplicationDbContext.StudentList.Count();
+            int recordsTotalCount = _context.students.Count();
 
             // Filtered & Sorted & Paged data to be sent from server to view
             List<Student> filteredData = null;
             if (sortColumnDirection == "asc")
             {
-                filteredData =
-                    ApplicationDbContext.StudentList
+                try
+                {
+                    filteredData =
+                    _context.students
                     .Where(a => a.Lastname.Contains(searchValue) || a.Firstname.Contains(searchValue))
-                    .OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x))//Sort by sortColumn
+                    //.OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x, null))//Sort by sortColumn
                     .Skip(start)
                     .Take(length)
                     .ToList<Student>();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                
             }
             else
             {
                 filteredData =
-                   ApplicationDbContext.StudentList
+                   _context.students
                    .Where(a => a.Lastname.Contains(searchValue) || a.Firstname.Contains(searchValue))
-                   .OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x))
+                   //.OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x, null))
                    .Skip(start)
                    .Take(length)
                    .ToList<Student>();
@@ -88,7 +103,7 @@ namespace DatatablesServerSide.Controllers
         // GET: Student/Details/5
         public ActionResult Details(int id)
         {
-            Student s = ApplicationDbContext.StudentList.FirstOrDefault(a => a.Id == id);
+            Student s = _context.students.FirstOrDefault(a => a.Id == id);
             return View(s);
         }
 
