@@ -29,7 +29,7 @@ namespace AspNetCoreServerSidePaginationWithDataTables.Controllers
         
         public JsonResult GetFilteredItems()
         {
-            System.Threading.Thread.Sleep(2000);//Used to display loading message in demonstration, remove this line in production
+            //System.Threading.Thread.Sleep(2000);//Used to display loading message in demonstration, remove this line in production
             int draw = Convert.ToInt32(Request.Query["draw"]);
 
             // Data to be skipped , 
